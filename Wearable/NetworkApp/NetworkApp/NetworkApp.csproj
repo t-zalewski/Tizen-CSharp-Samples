@@ -11,9 +11,6 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>None</DebugType>
   </PropertyGroup>
-  <ItemGroup>
-    <Compile Remove="Models\ConnectionImplementation.cs" />
-  </ItemGroup>
 
   <ItemGroup>
     <Folder Include="lib\" />
