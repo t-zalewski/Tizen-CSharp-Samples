@@ -73,7 +73,6 @@ namespace Weather.Behaviors
         {
             if (sender is Entry entry)
             {
-                Tizen.Log.Debug("WEATHERAPP", $"ChangeCityName + {entry.Text} + :: {City?.Name}");
                 if (City != null && City.Name == entry.Text)
                 {
                     entry.TextColor = Color.FromRgb(128, 128, 128);

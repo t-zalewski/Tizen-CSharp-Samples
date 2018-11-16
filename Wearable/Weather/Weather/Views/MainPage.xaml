@@ -76,7 +76,7 @@
                    HorizontalTextAlignment="Center"
                    VerticalTextAlignment="Center" 
                    IsVisible="{Binding Source={x:Reference Name=ViewModel}, Path=InvalidCityEntered}"/>
-            
+
             <w:CircleListView ItemsSource="{Binding Cities}"
                       SelectedItem="{Binding SelectedCity, Mode=TwoWay}"   
                       IsVisible="{Binding Source={x:Reference Name=ViewModel}, Path=InvalidCityEntered}"
@@ -85,12 +85,10 @@
                       WidthRequest="260" 
                       HorizontalOptions="Center"
                       BackgroundColor="Black">
-
                 <w:CircleListView.ItemTemplate>
                     <DataTemplate>
                         <ViewCell>
                             <Label Text="{Binding Name}"
-                                   FontAttributes="Bold"
                                    FontSize="10"
                                    HeightRequest="50"
                                    HorizontalTextAlignment="Center"

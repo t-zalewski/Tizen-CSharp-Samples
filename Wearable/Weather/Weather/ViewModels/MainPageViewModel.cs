@@ -86,17 +86,8 @@ namespace Weather.ViewModels
         /// Flag used for Watch UI visibility.
         /// A "helper" UI element (list of cities matching criteria) should be hidden if the right city is entered       
         /// </summary>
-        public bool InvalidCityEntered
-        {
-            get
-            {
-                if ((SelectedCity == null) && (EnteredCity.Length != 0))
-                {
-                    return true;
-                }
-                return false;
-            }
-        }
+        public bool InvalidCityEntered => (SelectedCity == null) && (EnteredCity.Length != 0) ? true : false;
+
         /// <summary>
         /// Gets or sets collection of available cities.
         /// </summary>
@@ -106,6 +97,9 @@ namespace Weather.ViewModels
             set => SetProperty(ref _cities, value);
         }
 
+        /// <summary>
+        /// Gets or sets text color for CityEntry.
+        /// </summary>
         public Color CityEntryTextColor
         {
             get => _cityEntryTextColor;
@@ -120,7 +114,6 @@ namespace Weather.ViewModels
             get => _enteredCity;
             set
             {
-                Tizen.Log.Debug("WEATHERAPP", "ENTEREDCITY FIRE");
                 SetProperty(ref _enteredCity, value);
                 OnPropertyChanged(nameof(InvalidCityEntered));
                 FilterCities();
@@ -136,7 +129,6 @@ namespace Weather.ViewModels
             get => _selectedCity;
             set
             {
-                Tizen.Log.Debug("WEATHERAPP", $"City changed: {value?.Name}");
                 SetProperty(ref _selectedCity, value);
                 OnPropertyChanged(nameof(InvalidCityEntered));
                 if (value != null)
@@ -195,7 +187,7 @@ namespace Weather.ViewModels
             CityEntryTextColor = Color.FromRgb(128, 128, 128);
 
             // Fill in the country code for better "first run experience"           
-            SetProperty<string>(ref _enteredCountry, "US");            
+            SetProperty<string>(ref _enteredCountry, "US");
         }
 
         /// <summary>
