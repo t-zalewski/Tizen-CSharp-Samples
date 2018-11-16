@@ -20,6 +20,7 @@ using Weather.Models.Location;
 using Weather.Service;
 using Weather.Utils;
 using Xamarin.Forms;
+using Xamarin.Forms.Internals;
 
 namespace Weather.ViewModels
 {
@@ -73,9 +74,9 @@ namespace Weather.ViewModels
         private string _enteredCountry;
 
         /// <summary>
-        /// Local storage of command that will be executed, when input will be completed.
+        /// Local storage of CityEntry text color.
         /// </summary>
-        private Command _onCityEnteredCommand;
+        private Color _cityEntryTextColor;
 
         #endregion
 
@@ -105,6 +106,12 @@ namespace Weather.ViewModels
             set => SetProperty(ref _cities, value);
         }
 
+        public Color CityEntryTextColor
+        {
+            get => _cityEntryTextColor;
+            set => SetProperty(ref _cityEntryTextColor, value);
+        }
+
         /// <summary>
         /// Gets or sets city name entered by user.
         /// </summary>
@@ -113,6 +120,7 @@ namespace Weather.ViewModels
             get => _enteredCity;
             set
             {
+                Tizen.Log.Debug("WEATHERAPP", "ENTEREDCITY FIRE");
                 SetProperty(ref _enteredCity, value);
                 OnPropertyChanged(nameof(InvalidCityEntered));
                 FilterCities();
@@ -128,6 +136,7 @@ namespace Weather.ViewModels
             get => _selectedCity;
             set
             {
+                Tizen.Log.Debug("WEATHERAPP", $"City changed: {value?.Name}");
                 SetProperty(ref _selectedCity, value);
                 OnPropertyChanged(nameof(InvalidCityEntered));
                 if (value != null)
@@ -146,15 +155,6 @@ namespace Weather.ViewModels
         {
             get => _checkWeatherCommand;
             set => SetProperty(ref _checkWeatherCommand, value);
-        }
-
-        /// <summary>
-        /// Command that will be executed when input will be completed.
-        /// </summary>
-        public Command OnCityEnteredCommand
-        {
-            get => _onCityEnteredCommand;
-            set => SetProperty(ref _onCityEnteredCommand, value);
         }
 
         /// <summary>
@@ -191,10 +191,8 @@ namespace Weather.ViewModels
             LoadCityList();
 
             Cities = new ObservableCollection<City>(_provider.FindCity("", MAX_ITEMS_ON_LIST));
-
             CheckWeatherCommand = new Command<Page>(ExecuteCheckWeatherCommand, CanExecuteCheckWeatherCommand);
-
-            OnCityEnteredCommand = new Command(() => SelectedCity = Cities.FirstOrDefault());
+            CityEntryTextColor = Color.FromRgb(128, 128, 128);
 
             // Fill in the country code for better "first run experience"           
             SetProperty<string>(ref _enteredCountry, "US");            
@@ -215,8 +213,8 @@ namespace Weather.ViewModels
         /// </summary>
         private void FilterCities()
         {
-            Cities = new ObservableCollection<City>(
-                _provider.FindCity(_enteredCity, _enteredCountry, MAX_ITEMS_ON_LIST));
+            Cities.Clear();
+            _provider.FindCity(_enteredCity, _enteredCountry, MAX_ITEMS_ON_LIST).ForEach(c => Cities.Add(c));
         }
 
         /// <summary>
@@ -227,7 +225,12 @@ namespace Weather.ViewModels
             if (!_provider.Validate(EnteredCity))
             {
                 SelectedCity = null;
+                CityEntryTextColor = Color.Red;
                 CheckWeatherCommand.ChangeCanExecute();
+            }
+            else
+            {
+                CityEntryTextColor = Color.FromRgb(128, 128, 128);
             }
         }
 
